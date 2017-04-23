@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Billetera Mata Galán</string>
+
+    <string name="resumen">Resumen</string>
+    <string name="action_settings">Settings</string>
+    <string name="add_gasto">+ Gasto</string>
+    <string name="add_ingreso">+ Ingreso</string>
+
+</resources>
