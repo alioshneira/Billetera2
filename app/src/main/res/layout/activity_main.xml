@@ -38,47 +38,11 @@
             android:id="@+id/lbGastoTotal" />
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <fragment android:name="pe.alinet.billetera2.InputFragment"
+        android:id="@+id/InputFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/layout3"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp">
-
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtDescripcion"
-            android:layout_weight="1"
-            android:hint="payment description" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text=" S/. "
-            android:id="@+id/lbsoles"
-            android:paddingStart="6dp" />
-
-        <EditText
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:id="@+id/txtCantidad"
-            android:hint="amount"
-            android:gravity="right" />
-
-
-        <Button
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:text="+"
-            android:id="@+id/btnAddGasto"
-            android:layout_alignParentTop="true" />
-
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        />
 
     <ListView
         android:layout_width="match_parent"
