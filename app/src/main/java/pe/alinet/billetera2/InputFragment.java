@@ -29,6 +29,8 @@ public class InputFragment extends Fragment {
             public void onClick(View v) {
                 String description = tDescription.getText().toString();
                 String amount = tAmount.getText().toString();
+                tDescription.setText("");
+                tAmount.setText("");
 
                 onNewInputAddedListener.onNewInputAdded(description,amount);
             }

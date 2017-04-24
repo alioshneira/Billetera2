@@ -12,12 +12,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,9 +27,13 @@ import java.util.Date;
 
 public class MainActivity extends Activity implements
         LoaderManager.LoaderCallbacks<Cursor>,
-        View.OnClickListener{
+        InputFragment.OnNewInputAddedListener{
 
     ListView listview;
+    long selected = -1;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,36 +41,25 @@ public class MainActivity extends Activity implements
         setContentView(R.layout.activity_main);
 
         listview = (ListView) findViewById(R.id.listview);
-        getLoaderManager().initLoader(0,null,this);
+        listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listview.setSelector(android.R.color.holo_blue_light);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
 
-        Button btnAddGasto =  (Button) findViewById(R.id.btnAddGasto);
-        btnAddGasto.setOnClickListener(this);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SimpleCursorAdapter adapter = (SimpleCursorAdapter) listview.getAdapter();
+                selected = adapter.getItemId(position);
+            }
+        });
+
+        getLoaderManager().initLoader(0, null, this);
+
+//        Button btnAddGasto =  (Button) findViewById(R.id.btnAddGasto);
+//        btnAddGasto.setOnClickListener(this);
 
         loadLabels();
     }
 
-    @Override
-    public void onClick(View view){
-        ContentValues newValues = new ContentValues();
-        long fecha = java.lang.System.currentTimeMillis();
-        EditText txtCantidad = (EditText) findViewById(R.id.txtCantidad);
-        EditText txtDescripcion = (EditText) findViewById(R.id.txtDescripcion);
-
-        if (view.getId()== R.id.btnAddGasto) {
-
-            newValues.put(BilleteraContentProvider.KEY_QUANTITY, txtCantidad.getText().toString());
-            newValues.put(BilleteraContentProvider.KEY_DESCRIPTION, txtDescripcion.getText().toString());
-            newValues.put(BilleteraContentProvider.KEY_CREATION_DATE, fecha);
-
-            ContentResolver cr = getContentResolver();
-            Uri myRowUri = cr.insert(BilleteraContentProvider.CONTENT_URI, newValues);
-            txtCantidad.setText("");
-            txtDescripcion.setText("");
-
-            loadLabels();
-        }
-        getLoaderManager().restartLoader(0, null, this);
-    }
 
     public void loadLabels(){
         ContentResolver cr = getContentResolver();
@@ -96,6 +91,17 @@ public class MainActivity extends Activity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_delete) {
+
+            if (selected > -1) {
+                Toast.makeText(this, "selected:" + String.valueOf(selected), Toast.LENGTH_LONG).show();
+                ContentResolver cr = getContentResolver();
+                cr.delete(Uri.parse("content://pe.alinet.billetera/items/"+String.valueOf(selected)),null,null);
+                loadLabels();
+                getLoaderManager().restartLoader(0, null, this);
+            }
             return true;
         }
 
@@ -144,6 +150,24 @@ public class MainActivity extends Activity implements
 
 
     public void onLoaderReset(Loader<Cursor> loader) {
-        getLoaderManager().initLoader(0,null,this);
+        getLoaderManager().initLoader(0, null, this);
     }
+
+    @Override
+    public void onNewInputAdded(String description, String amount) {
+        ContentValues newValues = new ContentValues();
+        long fecha = java.lang.System.currentTimeMillis();
+        newValues.put(BilleteraContentProvider.KEY_QUANTITY,amount);
+        newValues.put(BilleteraContentProvider.KEY_DESCRIPTION, description);
+        newValues.put(BilleteraContentProvider.KEY_CREATION_DATE, fecha);
+
+        ContentResolver cr = getContentResolver();
+        Uri myRowUri = cr.insert(BilleteraContentProvider.CONTENT_URI, newValues);
+
+        loadLabels();
+
+        getLoaderManager().restartLoader(0, null, this);
+
+    }
+
 }

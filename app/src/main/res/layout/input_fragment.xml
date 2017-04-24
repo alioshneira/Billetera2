@@ -4,10 +4,10 @@ android:orientation="horizontal" android:layout_width="match_parent"
 android:layout_height="match_parent">
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:id="@+id/tDescription"
+        android:layout_weight="2"
         android:hint="Description" />
 
     <TextView
@@ -19,9 +19,9 @@ android:layout_height="match_parent">
         android:paddingStart="6dp" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:inputType="numberDecimal"
         android:id="@+id/tAmount"
         android:hint="0.00"
